@@ -91,6 +91,7 @@ document.getElementById("authForm").onsubmit = async function (e) {
             localStorage.setItem("fullname", payload.fullname);
             localStorage.setItem("studentId", payload.studentId || "");
             localStorage.setItem("userRole", selectedRole);
+            localStorage.setItem("email", payload.email);
 
             alert("Registration Successful! Redirecting to dashboard...");
 

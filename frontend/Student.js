@@ -178,11 +178,16 @@ function openModal(id, title, company, location, pack, desc) {
     }
 
     let user = localStorage.getItem("username");
+    let fullname = localStorage.getItem("fullname");
+    let userEmail = localStorage.getItem("email");
+    
     if (user) {
-        document.getElementById("fullName").value = user;
-        if (user.toLowerCase().includes("kiran")) {
-            document.getElementById("email").value = "chakalikiran340@gmail.com";
-        }
+        document.getElementById("fullName").value = fullname || user;
+    }
+    if (userEmail) {
+        document.getElementById("email").value = userEmail;
+    } else if (user && user.toLowerCase().includes("kiran")) {
+        document.getElementById("email").value = "chakalikiran340@gmail.com";
     }
 
     currentJob = title + "-" + company;
