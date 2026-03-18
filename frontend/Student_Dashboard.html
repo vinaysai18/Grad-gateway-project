@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>GradGateway - Student Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Student.css">
+
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="navbar-brand">
+            <img src="logo.png" class="logo">
+            <span class="brand-name">GradGateway</span>
+        </div>
+
+        <div class="nav-right">
+            <button class="nav-btn active" onclick="showSection('home',this)">Home</button>
+            <button class="nav-btn" onclick="showSection('jobs',this)">View Jobs</button>
+            <button class="nav-btn" onclick="showSection('applied',this)">Applied Jobs</button>
+            <button class="nav-btn" onclick="showSection('profile',this)">Profile</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div id="home" class="section active">
+            <h2 class="section-title">Welcome back, <span id="displayUsername">Student</span>!</h2>
+
+            <div class="home-content">
+                <div class="home-welcome-card">
+                    <h3>Placement Season 2024-25</h3>
+                    <p>Your career journey starts here. Browse through available job opportunities and apply to
+                        companies that match your skills.</p>
+                    <button class="home-cta-btn" onclick="document.querySelectorAll('.nav-btn')[1].click()">Browse
+                        Jobs</button>
+                </div>
+
+                <div class="home-stats-row">
+                    <div class="home-stat-card">
+                        <span class="stat-number">2</span>
+                        <span class="stat-text">Companies Visiting</span>
+                    </div>
+                    <div class="home-stat-card">
+                        <span class="stat-number">0</span>
+                        <span class="stat-text">Applications</span>
+                    </div>
+                    <div class="home-stat-card">
+                        <span class="stat-number">0</span>
+                        <span class="stat-text">Interviews</span>
+                    </div>
+                </div>
+
+                <div class="home-info-grid">
+                    <div class="info-card">
+                        <h4>📋 Quick Links</h4>
+                        <ul>
+                            <li><a href="#" onclick="document.querySelectorAll('.nav-btn')[1].click()">View All Jobs</a>
+                            </li>
+                            <li><a href="#" onclick="document.querySelectorAll('.nav-btn')[2].click()">My
+                                    Applications</a></li>
+                            <li><a href="#" onclick="document.querySelectorAll('.nav-btn')[3].click()">My Profile</a>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>💡 Tips</h4>
+                        <ul class="tips-list">
+                            <li>Keep your profile updated</li>
+                            <li>Tailor your resume for each application</li>
+                            <li>Prepare for interviews in advance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="home-notice">
+                    <h4>Notice Board</h4>
+                    <p>No new notices at this time. Check back regularly for updates on placement activities.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="jobs" class="section">
+            <h2>Available Jobs</h2>
+
+            <div class="jobs-container">
+
+                <div class="job-card">
+                    <h3>Software Developer</h3>
+                    <p>Infosys - Hyderabad</p>
+                    <button class="view-btn"
+                        onclick="openModal('job_static_1','Software Developer','Infosys','Hyderabad','5 LPA','Develop applications using Java and Spring Boot.')">
+                        View Details
+                    </button>
+                </div>
+
+                <div class="job-card">
+                    <h3>Frontend Developer</h3>
+                    <p>TCS - Bangalore</p>
+                    <button class="view-btn"
+                        onclick="openModal('job_static_2','Frontend Developer','TCS','Bangalore','4 LPA','Build UI using HTML, CSS and React.')">
+                        View Details
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <div id="applied" class="section">
+            <h2>My Applications</h2>
+
+            <div class="stats-container">
+                <div class="stat-box">
+                    <h2 id="totalCount">0</h2>
+                    <p>Total Applications</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2 id="inProgressCount">0</h2>
+                    <p>In Progress</p>
+                </div>
+
+                <div class="stat-box">
+                    <h2 id="offersCount">0</h2>
+                    <p>Offers</p>
+                </div>
+            </div>
+
+            <div id="appliedList"></div>
+        </div>
+
+        <div id="profile" class="section">
+            <div class="profile-tabs">
+                <h2 class="profile-tab active" onclick="switchProfileTab('details')">My Profile</h2>
+                <!-- <h2 class="profile-tab" onclick="switchProfileTab('resume')">Resume</h2> -->
+            </div>
+
+            <div id="profile-details-content" class="tab-content active">
+                <div class="profile-wrapper">
+                    <div class="profile-info-box">
+                        <div class="profile-main">
+                            <div class="profile-avatar-large"></div>
+                            <div class="profile-name-section">
+                                <h3 id="profileUsername">Kiran</h3>
+                                <p class="profile-branch">Computer Science & Engineering</p>
+                                <p class="profile-email">chakalikiran340@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="profile-details-grid">
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="detail-label">Roll Number</span>
+                                <span id="profileRollNumber" class="detail-value">21CS001</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Year</span>
+                                <span class="detail-value">Final Year</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-row">
+                            <div class="detail-item">
+                                <span class="detail-label">Institute</span>
+                                <span class="detail-value">GradGateway University</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Status</span>
+                                <span class="detail-value status-active">Active</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="skills-section">
+                        <h4>Technical Skills</h4>
+
+                        <div class="skills-category">
+                            <div class="skills-category-label">Programming Languages</div>
+                            <ul class="skills-list">
+                                <li>Java <span class="skill-level">Advanced</span></li>
+                                <li>Python <span class="skill-level">Intermediate</span></li>
+                                <li>JavaScript <span class="skill-level">Intermediate</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="skills-category">
+                            <div class="skills-category-label">Web Technologies</div>
+                            <ul class="skills-list">
+                                <li>HTML5 <span class="skill-level">Advanced</span></li>
+                                <li>CSS3 <span class="skill-level">Intermediate</span></li>
+                                <li>SQL <span class="skill-level">Intermediate</span></li>
+                            </ul>
+                        </div>
+
+                        <div class="skills-category">
+                            <div class="skills-category-label">Concepts</div>
+                            <ul class="skills-list">
+                                <li>Data Structures</li>
+                                <li>Algorithms</li>
+                                <li>Database Management</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="profile-resume-content" class="tab-content">
+                    <div class="resume-paper">
+                        <div class="resume-header">
+                            <h1 id="resumeName">Kiran</h1>
+                            <p>Computer Science & Engineering | GradGateway University</p>
+                            <div class="resume-contact">
+                                <span>📧 chakalikiran340@gmail.com</span>
+                                <span>📍 Hyderabad, India</span>
+                                <span>🔗 LinkedIn.com/in/kiran</span>
+                            </div>
+                        </div>
+
+                        <div class="resume-main-section">
+                            <h3>Summary</h3>
+                            <p>Dedicated Computer Science student with a strong foundation in software development, web
+                                technologies, and data structures. Passionate about building scalable applications and
+                                solving complex problems.</p>
+                        </div>
+
+                        <div class="resume-main-section">
+                            <h3>Education</h3>
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <strong>B.Tech in Computer Science & Engineering</strong>
+                                    <span>2021 - 2025</span>
+                                </div>
+                                <p>GradGateway University | CGPA: 8.5/10</p>
+                            </div>
+                        </div>
+
+                        <div class="resume-main-section">
+                            <h3>Technical Skills</h3>
+                            <div class="resume-skills-grid">
+                                <div class="resume-skill-group">
+                                    <strong>Languages:</strong> Java, Python, JavaScript, C++, SQL
+                                </div>
+                                <div class="resume-skill-group">
+                                    <strong>Web:</strong> HTML5, CSS3, React, Node.js
+                                </div>
+                                <div class="resume-skill-group">
+                                    <strong>Tools:</strong> Git, VS Code, Docker
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="resume-main-section">
+                            <h3>Projects</h3>
+                            <div class="resume-item">
+                                <div class="resume-item-header">
+                                    <strong>GradGateway Placement Portal</strong>
+                                    <span>Jan 2024 - Present</span>
+                                </div>
+                                <p>Developed a comprehensive placement management system using HTML, CSS, and JS.
+                                    Implemented secure login systems and real-time job application tracking.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- MODAL -->
+        <div id="jobModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">✖</span>
+                <div id="jobDetails">
+                    <h2 id="modalTitle"></h2>
+                    <div class="modal-info-grid">
+                        <p><strong>Company:</strong> <span id="modalCompany"></span></p>
+                        <p><strong>Location:</strong> <span id="modalLocation"></span></p>
+                        <p><strong>Package:</strong> <span id="modalPackage"></span></p>
+                    </div>
+                    <p><strong>Description:</strong></p>
+                    <p id="modalDesc"></p>
+
+                    <button id="applyButton" class="apply-btn" onclick="showApplicationForm()">Apply Now</button>
+                </div>
+
+                <div id="applicationForm" class="application-form" style="display: none;">
+                    <h3>Job Application</h3>
+                    <p class="form-subtitle">Applying for <span id="applyingFor"></span> at <span
+                            id="applyingAt"></span></p>
+
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fullName">Full Name</label>
+                            <input type="text" id="fullName" placeholder="Enter your full name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" placeholder="Enter your email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" placeholder="Enter your phone number" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="gradYear">Graduation Year</label>
+                            <select id="gradYear">
+                                <option value="2024">2024</option>
+                                <option value="2025">2025</option>
+                                <option value="2026">2026</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label for="resumeUpload">Upload Resume (PDF/DOCX)</label>
+                        <div class="file-upload-wrapper">
+                            <input type="file" id="resumeUpload" accept=".pdf,.doc,.docx" required>
+                            <div class="file-upload-design">
+                                <span class="upload-icon">📤</span>
+                                <span class="upload-text">Click to upload or drag and drop</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="back-btn" onclick="hideApplicationForm()">Back</button>
+                        <button class="submit-app-btn" onclick="submitApplication()">Submit Application</button>
+                    </div>
+                </div>
+
+                <div id="successView" class="success-view" style="display: none;">
+                    <div class="success-icon">✓</div>
+                    <h3>Application Submitted!</h3>
+                    <p>Your application for <strong id="successJob"></strong> has been sent successfully.</p>
+                    <button class="close-modal-btn" onclick="closeModal()">Close Window</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        © 2026 <strong>GradGateway</strong> | Official Placement Portal • Built for Excellence
+    </footer>
+
+        <script src="Student.js"></script>
+
+</body>
+
+</html>

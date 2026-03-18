@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GradGateway - Employer Dashboard</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="Employee.css">
+</head>
+
+<body>
+
+    <div class="navbar">
+        <div class="navbar-brand">
+            <img src="logo.png" class="logo">
+            <span class="brand-name">GradGateway</span>
+        </div>
+
+        <div class="nav-links">
+            <button class="nav-btn active" onclick="showSection('home', this)">Home</button>
+            <button class="nav-btn" onclick="showSection('postJob', this)">Post a Job</button>
+            <button class="nav-btn" onclick="showSection('jobs', this)">View Posted Jobs</button>
+            <button class="nav-btn" onclick="showSection('applications', this)">Applications</button>
+            <button class="nav-btn" onclick="showSection('profile', this)">Profile</button>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <div class="main-content">
+
+        <div id="home" class="section active">
+            <h2 class="section-title">Welcome to GradGateway, <span id="displayUsername">Employer</span>!</h2>
+
+            <div class="home-content">
+                <div class="home-welcome-card">
+                    <h3>Employer Dashboard</h3>
+                    <p>Post job opportunities and connect with talented students from RGUKT RK Valley. Manage your
+                        hiring process efficiently.</p>
+                    <button class="home-cta-btn" onclick="document.querySelectorAll('.nav-btn')[1].click()">Post a
+                        Job</button>
+                </div>
+
+                <div class="home-stats-row">
+                    <div class="home-stat-card">
+                        <span class="stat-number">120+</span>
+                        <span class="stat-text">Total Companies</span>
+                    </div>
+                    <div class="home-stat-card">
+                        <span class="stat-number">500+</span>
+                        <span class="stat-text">Students Placed</span>
+                    </div>
+                    <div class="home-stat-card">
+                        <span class="stat-number">18</span>
+                        <span class="stat-text">LPA Highest Package</span>
+                    </div>
+                </div>
+
+                <div class="home-info-grid">
+                    <div class="info-card">
+                        <h4>📋 Quick Links</h4>
+                        <ul>
+                            <li><a href="#" onclick="document.querySelectorAll('.nav-btn')[1].click()">Post New Job</a>
+                            </li>
+                            <li><a href="#" onclick="document.querySelectorAll('.nav-btn')[2].click()">View Posted
+                                    Jobs</a></li>
+                            <li><a href="#" onclick="document.querySelectorAll('.nav-btn')[3].click()">Company
+                                    Profile</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="info-card">
+                        <h4>💡 Hiring Tips</h4>
+                        <ul class="tips-list">
+                            <li>Provide detailed job descriptions</li>
+                            <li>Include competitive salary packages</li>
+                            <li>Specify clear eligibility criteria</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="home-notice">
+                    <h4>Notice</h4>
+                    <p>Ensure all job postings comply with institute placement guidelines. Contact the TPO for any
+                        assistance.</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="postJob" class="section">
+            <h2 class="section-title">Post a Job Opportunity</h2>
+
+            <div class="post-job-container">
+                <form class="job-form" onsubmit="addJob(); return false;">
+                    <div class="form-group">
+                        <label>Company Name</label>
+                        <input type="text" id="company" placeholder="Enter company name" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Job Role</label>
+                        <input type="text" id="role" placeholder="Enter job role" required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Package</label>
+                            <input type="text" id="package" placeholder="e.g. 6 LPA">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Location</label>
+                            <input type="text" id="location" placeholder="e.g. Hyderabad">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Job Description</label>
+                        <textarea id="description"
+                            placeholder="Describe the job responsibilities and requirements"></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Post Job</button>
+                </form>
+            </div>
+        </div>
+
+        <div id="jobs" class="section">
+            <h2 class="section-title">Posted Jobs</h2>
+
+            <div class="jobs-list-header">
+                <p>You have posted <span id="jobCount">0</span> job(s)</p>
+            </div>
+
+            <div id="jobList" class="jobs-grid"></div>
+        </div>
+
+        <div id="applications" class="section">
+            <h2 class="section-title">Applicant Applications <span>Recent</span></h2>
+
+            <div class="applications-view">
+                <div class="applicants-list">
+                    <!-- Applicants will be loaded here dynamically -->
+                </div>
+
+                <div id="applicantDetail" class="application-details">
+                    <div class="placeholder-message">
+                        <p>Select an applicant from the list to view their full profile and manage their application.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="profile" class="section">
+            <h2 class="section-title">Company Profile</h2>
+
+            <div class="profile-wrapper">
+                <div class="profile-info-box">
+                    <div class="profile-main">
+                        <div class="profile-avatar-large">TC</div>
+                        <div class="profile-name-section">
+                            <h3 id="profileUsername">Tech Corp Solutions</h3>
+                            <p class="profile-branch">IT Services & Consulting</p>
+                            <p class="profile-email">hr@techcorp.com</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="profile-details-grid">
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Company ID</span>
+                            <span class="detail-value">EMP001</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Industry</span>
+                            <span class="detail-value">Information Technology</span>
+                        </div>
+                    </div>
+
+                    <div class="detail-row">
+                        <div class="detail-item">
+                            <span class="detail-label">Location</span>
+                            <span class="detail-value">Hyderabad, Telangana</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Status</span>
+                            <span class="detail-value status-active">Verified</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skills-section">
+                    <h4>Company Details</h4>
+
+                    <div class="skills-category">
+                        <div class="skills-category-label">Hiring For</div>
+                        <ul class="skills-list">
+                            <li>Software Engineers</li>
+                            <li>Data Analysts</li>
+                            <li>Business Analysts</li>
+                        </ul>
+                    </div>
+
+                    <div class="skills-category">
+                        <div class="skills-category-label">Benefits</div>
+                        <ul class="skills-list">
+                            <li>Health Insurance</li>
+                            <li>Flexible Work Hours</li>
+                            <li>Learning & Development</li>
+                            <li>Performance Bonus</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        © 2026 <strong>GradGateway</strong> | Official Placement Portal • Built for Excellence
+    </footer>
+
+    <script src="Employee.js"></script>
+
+</body>
+
+</html>
