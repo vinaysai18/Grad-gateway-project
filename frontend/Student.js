@@ -1,4 +1,4 @@
-const API_BASE_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:' ? 'http://localhost:5000' : '';
+const API_BASE_URL = window.location.hostname === 'localhost' || window.location.protocol === 'file:' ? 'http://localhost:5000' : 'https://grad-gateway.onrender.com';
 
 let appliedJobs = [];
 let currentJob = "";
