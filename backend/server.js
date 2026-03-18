@@ -38,9 +38,11 @@ const pool = mysql.createPool({
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0
+    port: process.env.DB_PORT,
+    ssl: {
+        rejectUnauthorized: false
+    },
+    connectTimeout: 10000
 });
 
 // Initialize Database Tables
@@ -105,12 +107,12 @@ initDb();
 // Helper function to extract info from PDF text
 function analyzeResume(text) {
     if (!text || typeof text !== 'string') {
-        return { 
-            education: { university: 'GradGateway University', degree: 'B.Tech CSE', gpa: '8.5' }, 
-            skills: ['Web Development', 'Problem Solving'] 
+        return {
+            education: { university: 'GradGateway University', degree: 'B.Tech CSE', gpa: '8.5' },
+            skills: ['Web Development', 'Problem Solving']
         };
     }
-    
+
     let education = { university: 'Not Specified', degree: 'B.Tech / Degree', gpa: 'N/A' };
     let skills = [];
 
@@ -147,16 +149,16 @@ app.post('/api/register', async (req, res) => {
     try {
         const { username, email, password, role, fullname, studentId } = req.body;
         const [existingUsers] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
-        
+
         if (existingUsers.length > 0) {
             return res.status(400).json({ message: 'User already exists' });
         }
-        
+
         await pool.query(
             'INSERT INTO users (username, email, password, role, fullname, studentId) VALUES (?, ?, ?, ?, ?, ?)',
             [username, email, password, role, fullname || null, studentId || null]
         );
-        
+
         console.log('User registered:', email);
         res.status(201).json({ message: 'Registration successful' });
     } catch (error) {
@@ -169,17 +171,17 @@ app.post('/api/login', async (req, res) => {
     try {
         const { email, password, role } = req.body;
         const [users] = await pool.query(
-            'SELECT * FROM users WHERE email = ? AND password = ? AND role = ?', 
+            'SELECT * FROM users WHERE email = ? AND password = ? AND role = ?',
             [email, password, role]
         );
-        
+
         if (users.length === 0) {
             return res.status(401).json({ message: 'Invalid credentials' });
         }
-        
+
         const user = users[0];
-        res.status(200).json({ 
-            message: 'Login successful', 
+        res.status(200).json({
+            message: 'Login successful',
             username: user.username,
             fullname: user.fullname,
             studentId: user.studentId
@@ -206,12 +208,12 @@ app.post('/api/jobs', async (req, res) => {
         const { title, company, location, package, description } = req.body;
         const id = 'job_' + Date.now();
         const postedDate = new Date().toLocaleDateString();
-        
+
         await pool.query(
             'INSERT INTO jobs (id, title, company, location, package, description, postedDate) VALUES (?, ?, ?, ?, ?, ?, ?)',
             [id, title, company, location, package, description, postedDate]
         );
-        
+
         const newJob = { id, title, company, location, package, description, postedDate };
         console.log('Job posted:', newJob);
         res.status(201).json(newJob);
@@ -225,18 +227,18 @@ app.post('/api/jobs', async (req, res) => {
 app.get('/api/applications', async (req, res) => {
     try {
         const [applications] = await pool.query('SELECT * FROM applications');
-        
+
         // Parse skills back into array since it's stored as TEXT in DB
         const parsedApps = applications.map(app => ({
             ...app,
-            education: { 
-                university: app.education_university, 
-                degree: app.education_degree, 
-                gpa: app.education_gpa 
+            education: {
+                university: app.education_university,
+                degree: app.education_degree,
+                gpa: app.education_gpa
             },
             skills: app.skills ? JSON.parse(app.skills) : []
         }));
-        
+
         res.json(parsedApps);
     } catch (error) {
         console.error('Fetch applications error:', error);
@@ -246,11 +248,11 @@ app.get('/api/applications', async (req, res) => {
 
 app.post('/api/applications', upload.single('resume'), async (req, res) => {
     try {
-        let extractedDetails = { 
-            education: { university: 'Not Specified', degree: 'Not Specified', gpa: 'N/A' }, 
-            skills: ['General'] 
+        let extractedDetails = {
+            education: { university: 'Not Specified', degree: 'Not Specified', gpa: 'N/A' },
+            skills: ['General']
         };
-        
+
         if (req.file) {
             try {
                 const filePath = path.resolve(req.file.path);
@@ -266,7 +268,7 @@ app.post('/api/applications', upload.single('resume'), async (req, res) => {
         const appliedDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
         const resumePath = req.file ? req.file.path : null;
         const resumeFilename = req.file ? req.file.originalname : 'Resume.pdf';
-        
+
         const { fullName, email, phone, gradYear, jobId, jobTitle, company } = req.body;
 
         await pool.query(
@@ -274,9 +276,9 @@ app.post('/api/applications', upload.single('resume'), async (req, res) => {
             (id, fullName, email, phone, gradYear, jobId, jobTitle, company, appliedDate, status, resumePath, resumeFilename, education_university, education_degree, education_gpa, skills) 
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
             [
-                id, fullName, email, phone, gradYear, jobId, jobTitle, company, appliedDate, 'New', 
-                resumePath, resumeFilename, 
-                extractedDetails.education.university, extractedDetails.education.degree, extractedDetails.education.gpa, 
+                id, fullName, email, phone, gradYear, jobId, jobTitle, company, appliedDate, 'New',
+                resumePath, resumeFilename,
+                extractedDetails.education.university, extractedDetails.education.degree, extractedDetails.education.gpa,
                 JSON.stringify(extractedDetails.skills)
             ]
         );
@@ -285,7 +287,7 @@ app.post('/api/applications', upload.single('resume'), async (req, res) => {
             id, fullName, email, phone, gradYear, jobId, jobTitle, company, appliedDate, status: 'New',
             resumePath, resumeFilename, education: extractedDetails.education, skills: extractedDetails.skills
         };
-        
+
         console.log('Application submitted successfully:', id);
         res.status(201).json(application);
     } catch (error) {
@@ -298,18 +300,18 @@ app.put('/api/applications/:id/status', async (req, res) => {
     try {
         const { id } = req.params;
         const { status } = req.body;
-        
+
         const [result] = await pool.query('UPDATE applications SET status = ? WHERE id = ?', [status, id]);
-        
+
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: 'Application not found' });
         }
-        
+
         console.log(`Application ${id} status updated to: ${status}`);
-        
+
         // Return updated app (we fetch it to return the exact structure if needed, or just send a success message)
         const [updatedApp] = await pool.query('SELECT * FROM applications WHERE id = ?', [id]);
-        
+
         res.json(updatedApp[0]);
     } catch (error) {
         console.error('Update status error:', error);
@@ -321,11 +323,11 @@ app.get('/api/download/:id', async (req, res) => {
     try {
         const { id } = req.params;
         const [apps] = await pool.query('SELECT resumePath, resumeFilename FROM applications WHERE id = ?', [id]);
-        
+
         if (apps.length === 0 || !apps[0].resumePath) {
             return res.status(404).send('File not found');
         }
-        
+
         const absolutePath = path.resolve(apps[0].resumePath);
         res.download(absolutePath, apps[0].resumeFilename);
     } catch (error) {
